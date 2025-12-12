@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "simple-git-hooks": {
+    "pre-commit": "npx pretty-quick --staged"
+  },
   "dependencies": {
     "next": "16.0.10",
     "react": "19.2.1",
@@ -21,6 +24,9 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.0.10",
+    "prettier": "^3.7.4",
+    "pretty-quick": "^4.2.2",
+    "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   }
