@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kraken Forge Order Book
 
-## Getting Started
+[https://kraken-forge-orderbook.vercel.app](https://kraken-forge-orderbook.vercel.app)
 
-First, run the development server:
+## About
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app) and built with TypeScript, Redux Toolkit, shadcn/ui, Tailwind CSS, and the Kraken WebSocket API.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 💪 TypeScript
+- 🏗️ Next.js
+  - Fast development builds
+  - Optimized production build
+- 🛠️ Redux Toolkit
+  - Robust state management
+  - Granular state updates
+- 🎨 shadcn/ui
+  - Accelerates development with pre-built components
+  - Provides design consistency
+- 💅 Tailwind CSS
+  - Accelerates development with utility classes
+  - Pairs well with shadcn/ui
+- 🐙 Kraken WebSocket API
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Data Streaming
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Level 2 (L2) order book data is streamed via the Kraken WebSocket API. `websocketMiddleware` is responsible for connecting/disconnecting the websocket connection and sending/receiving websocket messages. `orderbookMiddleware` is responsible for subscribing/unsubscribing to the `book` channel and handling `book` channel messages.
 
-## Learn More
+**`book` channel subscribe flow**
 
-To learn more about Next.js, take a look at the following resources:
+![book channel subscribe flow diagram](/public/book-channel-subscribe-flow.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**`orderbook` state update flow**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+![orderbook state update flow diagram](/public/orderbook-state-update-flow.png)
 
-## Deploy on Vercel
+### Performance Optimizations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- React updates triggered by websocket data are throttled to improve performance and UX
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Depth graph rendering is hardware accelerated using CSS transforms
+
+- Skeleton loading states to improve perceived performance and UX
+
+- Only the latest 10 asks/bids per token are cached to prevent memory bloat
+
+- React Compiler is enabled for automatic memoization using `useMemo`, `useCallback`, and `React.memo`
+
+## Development
+
+### Prerequisites
+
+- node 22.x
+
+- npm 10.x
+
+### Running the App
+
+1. Run `npm install` to install all dependencies
+
+2. Run `npm run dev` to start the development server
+
+3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
