@@ -7,6 +7,7 @@ import { OrderBookTable } from '@/app/orderbook/components/orderbook-table';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   selectOrderBookBySymbol,
+  selectSpreadBySymbol,
   subscribeOrderBook,
   unsubscribeOrderBook,
 } from '@/lib/features/orderbook/orderbook-slice';
@@ -24,13 +25,9 @@ export function OrderBook() {
   const bookData = useAppSelector((state) =>
     selectOrderBookBySymbol(state, symbol),
   );
-  const asks = bookData?.asks ?? [];
-  const bids = bookData?.bids ?? [];
-  const lowestAsk = asks.length > 0 ? asks[0].price : null;
-  const highestBid = bids.length > 0 ? bids[0].price : null;
-  const spread =
-    lowestAsk !== null && highestBid !== null ? lowestAsk - highestBid : null;
-  const relativeSpread = spread !== null ? (spread / lowestAsk!) * 100 : null;
+  const { spread, relativeSpread } = useAppSelector((state) =>
+    selectSpreadBySymbol(state, symbol),
+  );
 
   useEffect(() => {
     if (websocketStatus !== 'open' || !token) {
@@ -63,13 +60,13 @@ export function OrderBook() {
     maximumFractionDigits: token.pairDecimals,
   });
 
-  const formattedAsks = asks.map((ask) => ({
+  const formattedAsks = (bookData?.asks ?? []).map((ask) => ({
     price: priceFormatter.format(ask.price),
     qty: ask.qty.toFixed(token.lotDecimals),
     total: ask.total.toFixed(token.lotDecimals),
   }));
 
-  const formattedBids = bids.map((bid) => ({
+  const formattedBids = (bookData?.bids ?? []).map((bid) => ({
     price: priceFormatter.format(bid.price),
     qty: bid.qty.toFixed(token.lotDecimals),
     total: bid.total.toFixed(token.lotDecimals),

@@ -1,5 +1,6 @@
 import {
   type PayloadAction,
+  createSelector,
   createSlice,
   prepareAutoBatched,
 } from '@reduxjs/toolkit';
@@ -147,3 +148,17 @@ export const {
 } = orderbookSlice.actions;
 
 export const { selectOrderBookBySymbol } = orderbookSlice.selectors;
+
+export const selectSpreadBySymbol = createSelector(
+  [selectOrderBookBySymbol],
+  (bookData) => {
+    if (bookData && bookData.asks.length > 0 && bookData.bids.length > 0) {
+      const lowestAsk = bookData.asks[0].price;
+      const highestBid = bookData.bids[0].price;
+      const spread = lowestAsk - highestBid;
+      const relativeSpread = (spread / lowestAsk) * 100;
+      return { spread, relativeSpread };
+    }
+    return { spread: null, relativeSpread: null };
+  },
+);
