@@ -23,7 +23,7 @@ export interface BookData {
 }
 
 interface OrderBookState {
-  [symbol: string]: BookData;
+  [symbol: string]: BookData | undefined;
 }
 
 const initialState = {} satisfies OrderBookState as OrderBookState;
@@ -76,17 +76,18 @@ export const orderbookSlice = createSlice({
       reducer(state, action: PayloadAction<OrdersMessage>) {
         const { type, data } = action.payload;
         const [bookItem] = data;
+        const bookState = state[bookItem.symbol];
 
-        if (!state[bookItem.symbol]) {
+        if (!bookState) {
           return;
         }
 
         if (type === 'snapshot') {
-          state[bookItem.symbol].snapshotReceived = true;
+          bookState.snapshotReceived = true;
         }
 
-        const prevAsks = state[bookItem.symbol].asks;
-        const prevBids = state[bookItem.symbol].bids;
+        const prevAsks = bookState.asks;
+        const prevBids = bookState.bids;
 
         const asks = prepareOrders(
           prevAsks,
@@ -99,10 +100,9 @@ export const orderbookSlice = createSlice({
           (a, b) => b.price - a.price,
         );
 
-        state[bookItem.symbol].asks = asks;
-        state[bookItem.symbol].bids = bids;
-        state[bookItem.symbol].timestamp =
-          bookItem.timestamp ?? new Date().toISOString();
+        bookState.asks = asks;
+        bookState.bids = bids;
+        bookState.timestamp = bookItem.timestamp ?? new Date().toISOString();
       },
       prepare: prepareAutoBatched<OrdersMessage>(),
     },
