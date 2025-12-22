@@ -45,6 +45,7 @@ export const ordersMessageSchema = z.object({
         symbol: z.string(),
         asks: z.array(orderSchema),
         bids: z.array(orderSchema),
+        timestamp: z.string().optional(),
       }),
     )
     .length(1),

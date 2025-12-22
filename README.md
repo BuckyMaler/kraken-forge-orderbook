@@ -37,8 +37,6 @@ Level 2 (L2) order book data is streamed via the Kraken WebSocket API. `websocke
 
 - React updates triggered by websocket data are throttled to improve performance and UX
 
-- Selectors are memoized to reduce expensive calculations and component re-renders
-
 - Depth graph rendering is hardware accelerated using CSS transforms
 
 - Skeleton loading states to improve perceived performance and UX

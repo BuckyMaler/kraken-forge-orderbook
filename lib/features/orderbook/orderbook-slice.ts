@@ -1,6 +1,5 @@
 import {
   type PayloadAction,
-  createSelector,
   createSlice,
   prepareAutoBatched,
 } from '@reduxjs/toolkit';
@@ -15,13 +14,16 @@ import {
   type SubscriptionStatusType,
 } from '@/lib/websocket/constants';
 
+export interface BookData {
+  asks: Array<Order & { total: number }>;
+  bids: Array<Order & { total: number }>;
+  subscriptionStatus: SubscriptionStatusType;
+  snapshotReceived: boolean;
+  timestamp: string;
+}
+
 interface OrderBookState {
-  [symbol: string]: {
-    asks: Array<Order & { total: number }>;
-    bids: Array<Order & { total: number }>;
-    subscriptionStatus: SubscriptionStatusType;
-    snapshotReceived: boolean;
-  };
+  [symbol: string]: BookData;
 }
 
 const initialState = {} satisfies OrderBookState as OrderBookState;
@@ -38,6 +40,7 @@ export const orderbookSlice = createSlice({
           bids: [],
           subscriptionStatus: SubscriptionStatus.SUBSCRIBING,
           snapshotReceived: false,
+          timestamp: '',
         };
       } else {
         state[symbol].subscriptionStatus = SubscriptionStatus.SUBSCRIBING;
@@ -65,6 +68,7 @@ export const orderbookSlice = createSlice({
           state[symbol].bids = [];
           state[symbol].subscriptionStatus = SubscriptionStatus.UNSUBSCRIBED;
           state[symbol].snapshotReceived = false;
+          state[symbol].timestamp = '';
         }
       }
     },
@@ -97,6 +101,8 @@ export const orderbookSlice = createSlice({
 
         state[bookItem.symbol].asks = asks;
         state[bookItem.symbol].bids = bids;
+        state[bookItem.symbol].timestamp =
+          bookItem.timestamp ?? new Date().toISOString();
       },
       prepare: prepareAutoBatched<OrdersMessage>(),
     },
@@ -148,17 +154,3 @@ export const {
 } = orderbookSlice.actions;
 
 export const { selectOrderBookBySymbol } = orderbookSlice.selectors;
-
-export const selectSpreadBySymbol = createSelector(
-  [selectOrderBookBySymbol],
-  (bookData) => {
-    if (bookData && bookData.asks.length > 0 && bookData.bids.length > 0) {
-      const lowestAsk = bookData.asks[0].price;
-      const highestBid = bookData.bids[0].price;
-      const spread = lowestAsk - highestBid;
-      const relativeSpread = (spread / lowestAsk) * 100;
-      return { spread, relativeSpread };
-    }
-    return { spread: null, relativeSpread: null };
-  },
-);

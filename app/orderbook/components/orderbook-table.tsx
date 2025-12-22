@@ -39,9 +39,9 @@ export function OrderBookTable({
           ? Array.from({ length: 10 }).map((_, index) => (
               <OrderBookTableSkeleton key={index} type={type} />
             ))
-          : rows.map((row) => (
+          : rows.map((row, index) => (
               <OrderBookTableRow
-                key={row.price}
+                key={index}
                 row={row}
                 type={type}
                 maxTotal={rows[rows.length - 1].total}
