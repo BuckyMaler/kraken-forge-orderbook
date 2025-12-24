@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "kraken-forge-component-registry",
+  "homepage": "https://kraken-forge-component-registry.vercel.app",
+  "items": [
+    {
+      "name": "orderbook",
+      "type": "registry:component",
+      "title": "Order Book",
+      "description": "A sleek order book component",
+      "registryDependencies": ["card", "item"],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/orderbook/orderbook.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/orderbook/orderbook-table.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/orderbook/orderbook-spread.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}

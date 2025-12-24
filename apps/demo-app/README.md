@@ -1,6 +1,6 @@
-# Kraken Forge Order Book
+# Kraken Forge Demo App
 
-[https://kraken-forge-orderbook.vercel.app](https://kraken-forge-orderbook.vercel.app)
+[https://kraken-forge-demo-app.vercel.app](https://kraken-forge-demo-app.vercel.app)
 
 ## About
 
@@ -27,11 +27,11 @@ Level 2 (L2) order book data is streamed via the Kraken WebSocket API. `websocke
 
 **`book` channel subscribe flow**
 
-![book channel subscribe flow diagram](/public/book-channel-subscribe-flow.png)
+![book channel subscribe flow diagram](/apps/demo-app/public/book-channel-subscribe-flow.png)
 
 **`orderbook` state update flow**
 
-![orderbook state update flow diagram](/public/orderbook-state-update-flow.png)
+![orderbook state update flow diagram](/apps/demo-app/public/orderbook-state-update-flow.png)
 
 ### Performance Optimizations
 
@@ -51,12 +51,12 @@ Level 2 (L2) order book data is streamed via the Kraken WebSocket API. `websocke
 
 - node 22.x
 
-- npm 10.x
+- pnpm 10.x
 
 ### Running the App
 
-1. Run `npm install` to install all dependencies
+1. Run `pnpm install` to install all dependencies
 
-2. Run `npm run dev` to start the development server
+2. Run `pnpm run dev` to start the development server
 
 3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
